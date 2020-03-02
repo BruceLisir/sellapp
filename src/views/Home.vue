@@ -234,7 +234,7 @@ export default {
       line-height: 60px;
       color: rgb(154, 157, 159);
       font-size: 16px;
-      text-indent: 16px;
+      text-indent: 48px;
     }
     .clickbtn {
       width: 20%;

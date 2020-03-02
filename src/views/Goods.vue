@@ -79,7 +79,7 @@ export default {
      clicktitle(index){
      this.curindex=index;
      //让右侧随左侧滚动
-      this.goodsRight.scrollToElement(document.getElementById(index),600)
+      this.goodsRight.scrollToElement(document.getElementById(index),300)
       },
       //点击数量减
        clickdel( goods,name){
@@ -98,11 +98,10 @@ export default {
     getMath(){
       let arr=[];
       let total=0;
-      for(let i=0;i<this.data.length;i++){
+      for(let i=0;i<this.goodslist.length;i++){
       let heightdiv=document.getElementById(i).offsetHeight;
       arr.push({min:total,max:total+heightdiv,index:i}) ;
-      total+=heightdiv;
-
+         total+=heightdiv;
       }
       return arr;
     },
@@ -117,7 +116,7 @@ export default {
 
 <style lang="less" scoped>
 .selected{
-    background: #fff;
+    background:#fff;
 }
 .goods-div {
   display: flex;
