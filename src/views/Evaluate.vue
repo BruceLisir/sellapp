@@ -39,14 +39,11 @@
             <span>{{item.rateTime}}</span>
           </div>
           <p class="star">
-            <span></span> {{item.deliveryTime}}分钟送达
+            <span></span> <label v-show="item.deliveryTime>0">{{item.deliveryTime}}分钟送达</label>
           </p>
-          <p>{{item.text}}</p>
-         <div>
-           <span>{{item.recommend[0]}}</span>
-           <span>{{item.recommend[1]}}</span>
-           <span>{{item.recommend[2]}}</span>
-           <span>{{item.recommend[3]}}</span>
+          <p >{{item.text}}</p>
+         <div  v-show="!(item.recommend=='')"><span> 推荐：</span>
+          <p v-for="items in item.recommend" :key='items.id'>{{items}}</p>
          </div>
          
         </div>

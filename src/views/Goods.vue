@@ -2,7 +2,7 @@
   <div class="goods-div">
     <div class="goods-left">
      <ul class="content">
-          <ul  v-for="(val,index) in data" :key="index" @click="clicktitle(index)" :class="{selected:index==curindex}">
+          <ul  v-for="(val,index) in goodslist" :key="index" @click="clicktitle(index)" :class="{selected:index==curindex}">
             <li>
             <img style="width: 16px" v-show="val.type==1" src="../assets/imgs/special_1@2x.png" alt="">
             <img style="width: 16px;" v-show="val.type==2" src="../assets/imgs/decrease_1@2x.png" alt="">
@@ -12,7 +12,7 @@
     </div>
     <div class="goods-right">
      <ul class="content">
-          <div :id="index" v-for="(item,index) in data" :key="item.id" >
+          <div :id="index" v-for="(item,index) in goodslist" :key="item.id" >
         <Header
           :style="{background: '#f3f6f6',height:'50px', textAlign:'left',}"
         >{{item.name}}</Header>
@@ -26,10 +26,12 @@
               <span>好评率{{items.rating}}%</span>
             </p>
             <p class="last-con">
-              <span class="price">￥{{items.price}}</span>
+              <span class="price">￥{{items.price}} <span v-show="items.oldPrice">￥{{items.oldPrice}}</span>
+              </span>
               <span class="list-btn">
-                <button>-</button>1
-                <button>+</button>
+                <button v-show="items.num > 0" @click="clickdel(items,items.name)">-</button>
+                <label v-show="items.num > 0" >{{items.num}}</label>
+                <button @click="clickadd(items,items.name)">+</button>
               </span>
             </p>
           </div>
@@ -45,13 +47,12 @@ import BScroll from "better-scroll";
 export default {
   data() {
     return {
-      data: {},
-      curindex:0
+      curindex:0,
     };
   },
   created() {
     getgoods().then(res => {
-      this.data = res.data.data;
+     this.$store.commit('initGoodsList', res.data.data)
     });
   },
   mounted(){
@@ -79,7 +80,19 @@ export default {
      this.curindex=index;
      //让右侧随左侧滚动
       this.goodsRight.scrollToElement(document.getElementById(index),600)
-      }
+      },
+      //点击数量减
+       clickdel( goods,name){
+        if(goods.name==name){
+                goods.num--
+              }
+       },
+      //点击数量加
+        clickadd(goods,name){
+              if(goods.name==name){
+                goods.num++
+              }
+        }
       },
   computed:{
     getMath(){
@@ -92,8 +105,11 @@ export default {
 
       }
       return arr;
-    }
-      
+    },
+      //获取vuex中的共享数据
+    goodslist(){
+      return this.$store.state.goodslist
+    } 
   }
     
 }
@@ -101,7 +117,7 @@ export default {
 
 <style lang="less" scoped>
 .selected{
-    background: #ff6600;
+    background: #fff;
 }
 .goods-div {
   display: flex;
@@ -115,7 +131,7 @@ export default {
     ul {
       li { 
         padding: 10px;
-        border-bottom: 1px solid #ccc;
+        border-bottom: 1px solid #f6f6f6;
         text-align: center;
         height: 60px;
         display: flex;
@@ -142,12 +158,12 @@ export default {
       display: flex;
       justify-content: space-around;
       padding: 20px;
-      height: 100px;
       .list-img {
         width: 25%;
+        height: 100%;
         img {
           width: 100%;
-          height: 100%;
+         height: 80px;
         }
       }
       .list-content {
@@ -158,18 +174,22 @@ export default {
           justify-content: space-between; 
           .price{
                 color: red;
-                font-weight: bold; }
+                font-weight: bold;
+                span{
+                  text-decoration: line-through;
+                 color: #aaa;
+                }
+                }
                 
-          .list-btn {
-           
-           
+         .list-btn {
             button {
               width: 20px;
               height: 20px;
               line-height: 2px;
-              background: skyblue;
-              color: #000;
+              background: #ccc;
+              color:  #fff;
               border-radius: 50%;
+              
             }
           }
         }
